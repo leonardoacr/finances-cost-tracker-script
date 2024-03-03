@@ -61,7 +61,6 @@ export default class DataProcessor {
     private categories: Categories,
     private bankVariablesNames: BankVariablesNames
   ) {
-    this.categories = categories;
     this.entries = [];
   }
 
@@ -164,9 +163,7 @@ export default class DataProcessor {
       if (isAmountDeposit) {
         category = 'Deposit';
       } else {
-        console.log(`Category not found for title: ${title}`);
-        console.log(`Please enter the category for "${title}":`);
-        category = readlineSync.question('> ');
+        category = 'Not Found';
       }
       this.updateCategories(category, title);
     }
@@ -175,14 +172,45 @@ export default class DataProcessor {
   }
 
   private updateCategories(category: string, title: string): void {
-    const existingCategory = this.categories.find(
+    let existingCategory = this.categories.find(
       (categoryItem) => categoryItem.name === category
     );
 
-    if (existingCategory) {
+    if (!existingCategory) {
+      existingCategory = { name: category, titles: [] };
+      this.categories.push(existingCategory);
+    }
+
+    if (!existingCategory.titles.includes(title)) {
       existingCategory.titles.push(title);
-    } else {
-      this.categories.push({ name: category, titles: [title] });
+    }
+  }
+
+  fixNotFoundCategories() {
+    const notFoundCategoriesIndex = this.categories.findIndex(
+      (category) => category.name === 'Not Found'
+    );
+
+    if (notFoundCategoriesIndex === -1) return;
+
+    const notFoundCategories = this.categories[notFoundCategoriesIndex];
+
+    const foundTitles: string[] = [];
+    notFoundCategories.titles.forEach((notFoundCategory) => {
+      console.log(`Category not found for title: ${notFoundCategory}`);
+      console.log(`Please enter the category for "${notFoundCategory}":`);
+      const category = readlineSync.question('> ');
+
+      this.updateCategories(category, notFoundCategory);
+
+      foundTitles.push(notFoundCategory);
+    });
+
+    this.categories[notFoundCategoriesIndex].titles =
+      notFoundCategories.titles.filter((title) => !foundTitles.includes(title));
+
+    if (this.categories[notFoundCategoriesIndex].titles.length === 0) {
+      this.categories.splice(notFoundCategoriesIndex, 1);
     }
   }
 

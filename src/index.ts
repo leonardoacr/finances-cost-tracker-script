@@ -38,6 +38,7 @@ const dataProcessor = new DataProcessor(categoriesJson, bankVariablesNames);
 dataProcessor.processCSVFiles();
 
 process.on('exit', () => {
+  dataProcessor.fixNotFoundCategories();
   const categoriesFilePath = './data/results/categories.json';
   const categories = dataProcessor.getCategories();
   saveJson(categoriesFilePath, categories);
