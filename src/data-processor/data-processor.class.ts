@@ -3,52 +3,15 @@ import csv from 'csv-parser';
 import readlineSync from 'readline-sync';
 import { toFixedValue } from './utils/to-fixed-value';
 import fs from 'fs';
-
-interface Transaction {
-  title: string;
-  category: string;
-  amount: number;
-  type: 'debit' | 'credit';
-}
-
-interface Entry {
-  date: string;
-  result: Transaction[];
-}
-
-interface TransactionNames {
-  amount: string;
-  title: string;
-  date: string;
-}
-
-export interface BankVariablesNames {
-  credit: TransactionNames;
-  debit: TransactionNames;
-}
-
-export type Categories = {
-  name: string;
-  titles: string[];
-}[];
-
-interface TotalAmountByCategoryItem {
-  date: string;
-  results: {
-    category: string;
-    amount: number;
-    items: Omit<Transaction, 'category'>[];
-  }[];
-  totalAmountSpent: number;
-  totalAmountDeposit: number;
-}
-
-type TotalAmountByCategory = TotalAmountByCategoryItem[];
-
-export interface CSVConfig {
-  directory: string;
-  fileExtensions: string[];
-}
+import { Transaction } from './interfaces/transaction.interface';
+import { BankVariablesNames } from './interfaces/bank-variables-names.interface';
+import { Categories } from './interfaces/categories.interface';
+import { Entry } from './interfaces/entry.interface';
+import {
+  TotalAmountByCategory,
+  TotalAmountByCategoryItem
+} from './interfaces/total-amount-by-category.interface';
+import { CSVConfig } from './interfaces/csv-config.interface';
 
 export default class DataProcessor {
   private csvConfig: CSVConfig = {

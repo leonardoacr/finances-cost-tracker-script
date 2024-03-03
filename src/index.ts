@@ -1,14 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import process from 'process';
-import DataProcessor, {
-  BankVariablesNames,
-  CSVConfig,
-  Categories
-} from './data-processor/data-processor.class.js';
+import DataProcessor from './data-processor/data-processor.class.js';
 import { saveJson } from './data-processor/utils/save-json.js';
+import { BankVariablesNames } from './data-processor/interfaces/bank-variables-names.interface.js';
+import { Categories } from './data-processor/interfaces/categories.interface.js';
 
-// Check if the categories file exists
 const categoriesFilePath = './data/results/categories.json';
 let categoriesJson: Categories | undefined;
 if (fs.existsSync(categoriesFilePath)) {
