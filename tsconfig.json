@@ -14,7 +14,6 @@
     "resolveJsonModule": true
   },
   "include": ["src"],
-  "exclude": [""],
   "scripts": {
     "start": "tsc -w & tscp -w & webpack -w",
     "build": "tsc && tscp"
