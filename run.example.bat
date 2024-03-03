@@ -1,4 +1,4 @@
-
 @echo off
 
-wt -d [REPLACE_WITH_CODE_PATH] -p "Bash" cmd /k "node index.js" 
+cd [REPLACE_WITH_PROJECT_PATH]
+tsc  && tscp  && wt -d dist -p "Bash" cmd /k "node index.js"
