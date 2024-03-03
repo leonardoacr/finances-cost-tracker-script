@@ -7,7 +7,7 @@ The Bank Cost Tracker is a personal script designed to organize Bank expenses in
 1. **Edit the .bat file**: Update the path within the .bat file with the location of your project directory.
 
 Example: 
-   > C:\Users\johndoe\Desktop\Bank-cost-tracker
+   > C:\Users\johndoe\Desktop\bank-cost-tracker\dist
 
 2. **Add CSV files**: Place the exported debit/credit CSV files from the Bank app or website into the `./data/csv` folder.
 
@@ -21,6 +21,6 @@ Example:
 
 - `src/data/csv/`: Directory for storing CSV files exported from Bank.
 - `dist/data/results/`: Directory for storing results exported from the script.
-- `src/`: Contains the main script for processing Bank transactions. You should change `bankVariablesNames`
+- `src/`: Contains the main script for processing Bank transactions. You should change `bankVariablesNames`, in this script it was defined based on `Nubank` CSV configuration. 
 - `README.md`: Instructions and information about the Bank Cost Tracker.
 - `.bat`: Batch file for running the script.
