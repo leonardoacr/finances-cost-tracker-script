@@ -1,3 +1,5 @@
 /node_modules
 /data
+/dist
+/src/data/csv
 run.bat
