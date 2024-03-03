@@ -1,14 +1,17 @@
 import { Transaction } from './transaction.interface';
 
 export interface TotalAmountByCategoryItem {
-  date: string;
-  results: {
-    category: string;
-    amount: number;
-    items: Omit<Transaction, 'category'>[];
+  year: number;
+  yearResults: {
+    totalAmountDeposit: number;
+    totalAmountSpent: number;
+    month: number;
+    monthResults: {
+      category: string;
+      amount: number;
+      items: Omit<Transaction, 'category'>[];
+    }[];
   }[];
-  totalAmountSpent: number;
-  totalAmountDeposit: number;
 }
 
 export type TotalAmountByCategory = TotalAmountByCategoryItem[];

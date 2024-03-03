@@ -46,11 +46,18 @@ process.on('exit', () => {
   saveJson(totalAmountByCategoryFilePath, categoryTotals);
 
   const categoryToShow = categoryTotals.map((categoryTotal) => {
-    const resultsWithoutItems = categoryTotal.results.map((result) => {
-      const { items, ...resultWithoutItems } = result;
-      return resultWithoutItems;
-    });
-    return { ...categoryTotal, results: resultsWithoutItems };
+    const yearResultsWithoutItems = categoryTotal.yearResults.map(
+      (yearResult) => {
+        const monthResultsWithoutItems = yearResult.monthResults.map(
+          (monthResult) => {
+            const { items, ...resultWithoutItems } = monthResult;
+            return resultWithoutItems;
+          }
+        );
+        return { ...yearResult, monthResults: monthResultsWithoutItems };
+      }
+    );
+    return { ...categoryTotal, yearResults: yearResultsWithoutItems };
   });
 
   console.log('Result: ', JSON.stringify(categoryToShow, null, 2));

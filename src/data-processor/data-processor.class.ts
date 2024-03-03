@@ -185,39 +185,53 @@ export default class DataProcessor {
     return this.categories;
   }
 
-  calculateTotalAmountByCategory(): TotalAmountByCategory {
-    const totalAmountByCategory: TotalAmountByCategory = [];
+  calculateTotalAmountByCategory(): TotalAmountByCategoryItem[] {
+    const totalAmountByCategory: TotalAmountByCategoryItem[] = [];
 
     for (const entry of this.entries) {
+      const [year, month] = entry.date.split('-').map(Number);
       let totalAmountDeposit = 0;
       let totalAmountSpent = 0;
 
-      const totalAmountByCategoryItem: TotalAmountByCategoryItem = {
-        date: entry.date,
-        results: [],
-        totalAmountDeposit: 0,
-        totalAmountSpent: 0
-      };
+      let yearIndex = totalAmountByCategory.findIndex(
+        (item) => item.year === year
+      );
+      if (yearIndex === -1) {
+        yearIndex = totalAmountByCategory.length;
+        totalAmountByCategory.push({ year, yearResults: [] });
+      }
+
+      let monthIndex = totalAmountByCategory[yearIndex].yearResults.findIndex(
+        (item) => item.month === month
+      );
+      if (monthIndex === -1) {
+        monthIndex = totalAmountByCategory[yearIndex].yearResults.length;
+        totalAmountByCategory[yearIndex].yearResults.push({
+          month,
+          monthResults: [],
+          totalAmountDeposit: 0,
+          totalAmountSpent: 0
+        });
+      }
+
+      const monthResults =
+        totalAmountByCategory[yearIndex].yearResults[monthIndex].monthResults;
 
       for (const entryResult of entry.result) {
-        const categoryIndex = totalAmountByCategoryItem.results.findIndex(
+        const categoryIndex = monthResults.findIndex(
           (result) => result.category === entryResult.category
         );
 
         if (categoryIndex !== -1) {
-          const totalAmountByCategoryItemResult =
-            totalAmountByCategoryItem.results[categoryIndex];
-          totalAmountByCategoryItemResult.amount = toFixedValue(
-            entryResult.amount + totalAmountByCategoryItemResult.amount,
-            2
-          );
-          totalAmountByCategoryItemResult.items.push({
+          const result = monthResults[categoryIndex];
+          result.amount = toFixedValue(entryResult.amount + result.amount, 2);
+          result.items.push({
             title: entryResult.title,
             amount: entryResult.amount,
             type: entryResult.type
           });
         } else {
-          totalAmountByCategoryItem.results.push({
+          monthResults.push({
             category: entryResult.category,
             amount: toFixedValue(entryResult.amount, 2),
             items: [
@@ -237,12 +251,14 @@ export default class DataProcessor {
         }
       }
 
-      totalAmountByCategoryItem.totalAmountDeposit +=
+      totalAmountByCategory[yearIndex].yearResults[
+        monthIndex
+      ].totalAmountDeposit +=
         totalAmountDeposit > 0 ? toFixedValue(totalAmountDeposit, 2) : 0;
-      totalAmountByCategoryItem.totalAmountSpent +=
+      totalAmountByCategory[yearIndex].yearResults[
+        monthIndex
+      ].totalAmountSpent +=
         totalAmountSpent < 0 ? toFixedValue(totalAmountSpent, 2) : 0;
-
-      totalAmountByCategory.push(totalAmountByCategoryItem);
     }
 
     return totalAmountByCategory;
