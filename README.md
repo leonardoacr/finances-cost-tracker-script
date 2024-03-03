@@ -15,7 +15,7 @@ Example:
 
 4. **Provide information**: Fill in the information that will be requested during the script execution.
 
-5. **Enjoy the results**: Utilize the organized data for tracking your monthly expenses efficiently. You will see a new file named `results.json`, `resultsByCategory.json` and `categories.json` into `./data` folder, aswell the total costs in terminal.
+5. **Enjoy the results**: Utilize the organized data for tracking your monthly expenses efficiently. You will see a new file named `resultsByCategory.json` and `categories.json` into `./data/results` folder, aswell the total costs in terminal.
 
 ## Repository Contents
 
