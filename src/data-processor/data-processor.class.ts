@@ -7,11 +7,12 @@ import { Transaction } from './interfaces/transaction.interface';
 import { BankVariablesNames } from './interfaces/bank-variables-names.interface';
 import { Categories } from './interfaces/categories.interface';
 import { Entry } from './interfaces/entry.interface';
+import { CSVConfig } from './interfaces/csv-config.interface';
 import {
   TotalAmountByCategory,
   TotalAmountByCategoryItem
 } from './interfaces/total-amount-by-category.interface';
-import { CSVConfig } from './interfaces/csv-config.interface';
+import { CsvRow } from './interfaces/csv-row.interface';
 
 export default class DataProcessor {
   private csvConfig: CSVConfig = {
@@ -38,13 +39,13 @@ export default class DataProcessor {
   }
 
   private processCSVFile(filePath: fs.PathLike, fileName: string): void {
-    let transactionType = this.determineTransactionType(fileName);
+    const transactionType = this.determineTransactionType(fileName);
 
     if (!transactionType) return;
 
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on('data', (row: any) =>
+      .on('data', (row: CsvRow) =>
         this.handleCSVRow(row, transactionType as Transaction['type'])
       )
       .on('end', () => console.log(`File ${fileName} processed successfully.`));
@@ -61,11 +62,14 @@ export default class DataProcessor {
     }
   }
 
-  private handleCSVRow(row: any, transactionType: Transaction['type']): void {
-    let amount: number = 0,
-      title: string = '',
-      category: string = '',
-      date: string = '';
+  private handleCSVRow(
+    row: CsvRow,
+    transactionType: Transaction['type']
+  ): void {
+    let amount = 0,
+      title = '',
+      category = '',
+      date = '';
     if (transactionType === 'credit') {
       amount = toFixedValue(
         parseFloat(row[this.bankVariablesNames.credit.amount]) * -1,
@@ -82,7 +86,7 @@ export default class DataProcessor {
       );
       title = row[this.bankVariablesNames.debit.title].trim();
       const rawDate = row[this.bankVariablesNames.debit.date].trim();
-      const [day, month, year] = rawDate.split('/');
+      const [, month, year] = rawDate.split('/');
       date = `${year}-${month}`;
     }
 
